@@ -12,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
@@ -28,7 +29,7 @@ public class VendorEndpoint {
     private EntityManager em;
 
     @POST
-    @Consumes("application/xml")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response create(Vendor entity) {
         em.persist(entity);
         return Response.created(UriBuilder.fromResource(VendorEndpoint.class).path(String.valueOf(entity.getId())).build()).build();
@@ -47,7 +48,7 @@ public class VendorEndpoint {
 
     @GET
     @Path("/{id:[0-9][0-9]*}")
-    @Produces("application/xml")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response findById(@PathParam("id") Long id) {
         Vendor entity = em.find(Vendor.class, id);
         if (entity == null) {
@@ -57,7 +58,7 @@ public class VendorEndpoint {
     }
 
     @GET
-    @Produces("application/xml")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Vendor> listAll() {
         final List<Vendor> results = em.createQuery("FROM Vendor", Vendor.class).getResultList();
         return results;
@@ -65,7 +66,7 @@ public class VendorEndpoint {
 
     @PUT
     @Path("/{id:[0-9][0-9]*}")
-    @Consumes("application/xml")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") Long id, Vendor entity) {
         entity.setId(id);
         entity = em.merge(entity);
